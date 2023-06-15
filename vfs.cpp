@@ -16,10 +16,10 @@ const std::string EXIT_CMD = "exit";
 
 const std::string HELP_STRING = "The following commands are supported: \n"
 	+ LIST_CMD + " [<directory>] - list directory content. \n"
-	+ CONTENT_CMD + " <path> - show file content. \n"
-	+ CREATE_FILE_CMD + " <path> - create empty file. \n"
-	+ EDIT_CMD + " <path> - re-set file content. \n"
-    + REMOVE_CMD + " <path> - remove file. \n"
+	+ CONTENT_CMD + " <path> - show File content. \n"
+	+ CREATE_FILE_CMD + " <path> - create empty File. \n"
+	+ EDIT_CMD + " <path> - re-set File content. \n"
+    + REMOVE_CMD + " <path> - remove File. \n"
 	+ HELP_CMD + " - show this help messege. \n"
 	+ EXIT_CMD + " - gracefully exit. \n";
 
@@ -58,19 +58,17 @@ void run_vfs(MyFs &fs) {
 			} else if (cmd[0] == HELP_CMD) {
 				std::cout << HELP_STRING;
 			} else if (cmd[0] == LIST_CMD) {
-                // Add your code here - call a MyFs function and don't put the implementation here
-				throw std::runtime_error("not implemented");
+                std::vector<File> all_files = fs.list_dir("");
+                for(const File& file: all_files) {
+                    std::cout << file;
+                }
             } else if (cmd[0] == CREATE_FILE_CMD) {
-                // Add your code here - call a MyFs function and don't put the implementation here
+				fs.create_file(cmd[1], false);
+			} else if (cmd[0] == CONTENT_CMD) { //todo
 				throw std::runtime_error("not implemented");
-			} else if (cmd[0] == CONTENT_CMD) {
-                // Add your code here - call a MyFs function and don't put the implementation here
+			} else if (cmd[0] == EDIT_CMD) { //todo
 				throw std::runtime_error("not implemented");
-			} else if (cmd[0] == EDIT_CMD) {
-                // Add your code here - call a MyFs function and don't put the implementation here
-				throw std::runtime_error("not implemented");
-			} else if (cmd[0] == REMOVE_CMD) {
-                // Add your code here - call a MyFs function and don't put the implementation here
+			} else if (cmd[0] == REMOVE_CMD) { //todo
 				throw std::runtime_error("not implemented");
             } else {
 				std::cout << "unknown command: " << cmd[0] << std::endl;

@@ -8,7 +8,7 @@
 int main(int argc, char **argv) {
 
 	if (argc != 2) {
-		std::cerr << "Please provide the file to operate on" << std::endl;
+		std::cerr << "Please provide the File to operate on" << std::endl;
 		return -1;
 	}
 

@@ -17,6 +17,7 @@ MyFs::MyFs(BlockDeviceSimulator *blkdevsim_):blkdevsim(blkdevsim_) {
 		format();
 		std::cout << "Finished!" << std::endl;
 	}
+    //todo create root dir
 }
 
 void MyFs::format() {
@@ -31,7 +32,10 @@ void MyFs::format() {
 }
 
 void MyFs::create_file(std::string path_str, bool directory) {
-	throw std::runtime_error("not implemented");
+    //todo check there arent directories like /..../...
+    File f = File(path_str, directory);
+    _files.push_back(f);
+
 }
 
 std::string MyFs::get_content(std::string path_str) {
@@ -43,6 +47,7 @@ void MyFs::set_content(std::string path_str, std::string content) {
 	throw std::runtime_error("not implemented");
 }
 
-void list_dir(std::string path_str) {
-	throw std::runtime_error("not implemented");
+std::vector<File> MyFs::list_dir(std::string path_str) {
+    //todo - check it is under the root path only (there aren't any dirs currently)
+    return _files;
 }

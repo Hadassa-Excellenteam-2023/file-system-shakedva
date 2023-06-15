@@ -1,7 +1,7 @@
 BIN_DIR = ./bin
 
-MYFS_HEADERS = blkdev.h myfs.h vfs.h
-MYFS_SRC_FILES = blkdev.cpp myfs.cpp vfs.cpp
+MYFS_HEADERS = blkdev.h myfs.h vfs.h File.h
+MYFS_SRC_FILES = blkdev.cpp myfs.cpp vfs.cpp File.cpp
 
 MYFS_MAIN_SRC = $(MYFS_SRC_FILES) myfs_main.cpp
 
