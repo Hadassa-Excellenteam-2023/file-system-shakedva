@@ -25,6 +25,7 @@ const std::string HELP_STRING = "The following commands are supported: \n"
 
 
 std::string getCmdContent(std::vector<std::string>);
+
 std::string getPath(std::vector<std::string>);
 
 std::vector<std::string> split_cmd(std::string cmd) {
@@ -56,22 +57,31 @@ void run_vfs(MyFs &fs) {
 
             if (cmd[0] == EXIT_CMD) {
                 exit = true;
-            } else if (cmd[0] == HELP_CMD) {
+            }
+            else if (cmd[0] == HELP_CMD) {
                 std::cout << HELP_STRING;
-            } else if (cmd[0] == LIST_CMD) {
-                std::vector<File> all_files = fs.list_dir( getPath(cmd));
+            }
+            else if (cmd[0] == LIST_CMD) {
+                std::vector<File> all_files = fs.list_dir(getPath(cmd));
                 for (const File &file: all_files) {
                     std::cout << file;
                 }
-            } else if (cmd[0] == CREATE_FILE_CMD) {
+            }
+            else if (cmd[0] == CREATE_FILE_CMD) {
                 fs.create_file(getPath(cmd), false);
-            } else if (cmd[0] == CONTENT_CMD) {
+                fs.updateBlockDevice();
+            }
+            else if (cmd[0] == CONTENT_CMD) {
                 std::cout << fs.get_content(getPath(cmd)) << std::endl;
-            } else if (cmd[0] == EDIT_CMD) {
+            }
+            else if (cmd[0] == EDIT_CMD) {
                 fs.set_content(getPath(cmd), getCmdContent(cmd));
-            } else if (cmd[0] == REMOVE_CMD) { //todo
+                fs.updateBlockDevice();
+            }
+            else if (cmd[0] == REMOVE_CMD) { //todo
                 throw std::runtime_error("not implemented");
-            } else {
+            }
+            else {
                 std::cout << "unknown command: " << cmd[0] << std::endl;
             }
         } catch (std::runtime_error &e) {
@@ -81,7 +91,7 @@ void run_vfs(MyFs &fs) {
 }
 
 std::string getPath(std::vector<std::string> cmd) {
-    if(cmd.size() > 1)
+    if (cmd.size() > 1)
         return cmd[1];
     return "";
 }
@@ -90,7 +100,7 @@ std::string getCmdContent(std::vector<std::string> cmd) {
     std::string content;
     for (size_t i = 2; i < cmd.size(); i++)
         content += cmd[i] + " ";
-    if(!content.empty())
+    if (!content.empty())
         content.pop_back(); //remove last whitespace
     return content;
 }

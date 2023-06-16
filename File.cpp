@@ -27,3 +27,11 @@ void File::setData(std::string data) {
 std::string File::getData() const {
     return _data;
 }
+
+int File::getInode() const {
+    return _inode;
+}
+
+bool File::getIsDir() const {
+    return _isDir;
+}

@@ -56,6 +56,7 @@ public:
 	 */
 	std::vector<File> list_dir(std::string path_str);
 
+    void updateBlockDevice();
 private:
 
 	/**
@@ -70,6 +71,8 @@ private:
 		char magic[4];
 		uint8_t version;
 	};
+    void parseBlockDevice();
+    std::string ltrim(const std::string &s);
 
 	BlockDeviceSimulator *blkdevsim;
 
@@ -77,6 +80,9 @@ private:
 	static const char *MYFS_MAGIC;
 
     std::vector<File> _files;
+    std::string _blkdevData;
+
+
 };
 
 #endif // __MYFS_H__
