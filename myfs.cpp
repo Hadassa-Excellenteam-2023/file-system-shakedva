@@ -37,14 +37,24 @@ void MyFs::create_file(std::string path_str, bool directory) {
     _files.push_back(f);
 
 }
-
 std::string MyFs::get_content(std::string path_str) {
-	throw std::runtime_error("not implemented");
-	return "";
+    for(const auto& file: _files)
+    {
+        if(file.getName() == path_str) {
+            return file.getData();
+        }
+    }
+    return "";
 }
 
 void MyFs::set_content(std::string path_str, std::string content) {
-	throw std::runtime_error("not implemented");
+    for(auto& file: _files)
+    {
+        if(file.getName() == path_str) {
+            file.setData(content);
+            return;
+        }
+    }
 }
 
 std::vector<File> MyFs::list_dir(std::string path_str) {

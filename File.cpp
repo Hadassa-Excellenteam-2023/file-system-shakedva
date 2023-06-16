@@ -15,3 +15,15 @@ std::ostream &operator<<(std::ostream &os, const File &file) {
     os << std::setw(MAX_FILE_NAME_CHARACTERS) << std::left <<file._name << " " << file.getDataBytes() << std::endl;
     return os;
 }
+
+std::string File::getName() const {
+    return _name;
+}
+
+void File::setData(std::string data) {
+    _data = data;
+}
+
+std::string File::getData() const {
+    return _data;
+}
