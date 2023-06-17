@@ -87,13 +87,21 @@ void run_vfs(MyFs &fs) {
         }
     }
 }
-
+/**
+ * Checks if command line received file path and returns it
+ * @param cmd command line string
+ * @return the file path
+ */
 std::string getPath(std::vector<std::string> cmd) {
     if (cmd.size() > 1)
         return cmd[1];
     return "";
 }
-
+/**
+ * Checks if command line received content and returns it
+ * @param cmd
+ * @return content received from the user via the cmd
+ */
 std::string getCmdContent(std::vector<std::string> cmd) {
     std::string content;
     for (size_t i = 2; i < cmd.size(); i++)

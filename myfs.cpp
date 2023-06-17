@@ -46,7 +46,6 @@ void MyFs::create_file(std::string path_str, bool directory) {
     File f = File(path_str, directory);
     _files.push_back(f);
     updateBlockDevice();
-
 }
 
 std::string MyFs::get_content(std::string path_str) {
@@ -66,15 +65,15 @@ void MyFs::set_content(std::string path_str, std::string content) {
             return;
         }
     }
-    //todo string format
     throw std::runtime_error("File does not exists");
-
 }
 
 std::vector<File> MyFs::list_dir(std::string path_str) {
     return _files;
 }
-
+/**
+ * Updates the block device
+ */
 void MyFs::updateBlockDevice() {
     _blkdevData = "\n";
     for (auto file: _files) {
@@ -84,7 +83,10 @@ void MyFs::updateBlockDevice() {
     }
     format();
 }
-
+/**
+ * Parses the block device file and creates the relevant files.
+ * Saves the files in _files.
+ */
 void MyFs::parseBlockDevice() {
     std::istringstream blkdevIss(_blkdevData);
     std::string line;
@@ -93,33 +95,44 @@ void MyFs::parseBlockDevice() {
     std::string data;
     char type;
     std::getline(blkdevIss, line); // remove empty line
+
+    // read lines from the block device
     while (std::getline(blkdevIss, line)) {
         std::istringstream lineIss(line);
         lineIss >> inode >> name >> type;
         std::getline(lineIss, data);
         data = ltrim(data);
+
         File file = File(name, type == 'd');
         file.setData(data);
         _files.push_back(file);
     }
 }
 
-std::string MyFs::ltrim(const std::string &s) {
-    size_t start = s.find_first_not_of(WHITESPACES);
-    return (start == std::string::npos) ? "" : s.substr(start);
-}
-
+/**
+ * @param path_str the File path
+ * @return true if the file exist in the file system, false otherwise.
+ */
 bool MyFs::isFileExists(const std::string& path_str) {
-    for(const auto& file: _files)
-        if(file.getName() == path_str)
-            return true;
-    return false;
-}
+    return std::any_of(_files.begin(), _files.end(),
+                [path_str](const File& file){return file.getName() == path_str;});
 
+}
+/**
+ * Removes the file from the file system.
+ * @param path_str the File path
+ */
 void MyFs::remove_file(const std::string& path_str) {
     _files.erase(std::remove_if(
             _files.begin(), _files.end(),
             [path_str](const File& x) {
                 return x.getName() ==  path_str;
             }), _files.end());
+}
+/**
+ * Trims trailing whitespaces
+ */
+std::string MyFs::ltrim(const std::string &s) {
+    size_t start = s.find_first_not_of(WHITESPACES);
+    return (start == std::string::npos) ? "" : s.substr(start);
 }

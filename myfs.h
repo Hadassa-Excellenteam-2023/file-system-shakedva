@@ -56,6 +56,13 @@ public:
 	 */
 	std::vector<File> list_dir(std::string path_str);
 
+    /**
+     * remove_file method
+     * Removes a file indicated by path_str param.
+     * Note: this method assumes path_str refers to a file and not a
+	 * directory.
+     * @param path_str the File path (e.g. "/somefile")
+     */
     void remove_file(const std::string& path_str);
 
 private:
@@ -72,10 +79,17 @@ private:
 		char magic[4];
 		uint8_t version;
 	};
+    /**
+     * Parses the block device file and creates the relevant files.
+     */
     void parseBlockDevice();
+    /**
+     * Updates the block device file with the correct files.
+     */
+    void updateBlockDevice();
     std::string ltrim(const std::string &s);
     bool isFileExists(const std::string&);
-    void updateBlockDevice();
+
 
 	BlockDeviceSimulator *blkdevsim;
 	static const uint8_t CURR_VERSION = 0x03;
@@ -83,8 +97,6 @@ private:
 
     std::vector<File> _files;
     std::string _blkdevData;
-
-
 };
 
 #endif // __MYFS_H__
