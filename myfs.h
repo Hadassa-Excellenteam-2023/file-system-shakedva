@@ -56,7 +56,8 @@ public:
 	 */
 	std::vector<File> list_dir(std::string path_str);
 
-    void updateBlockDevice();
+    void remove_file(const std::string& path_str);
+
 private:
 
 	/**
@@ -73,9 +74,10 @@ private:
 	};
     void parseBlockDevice();
     std::string ltrim(const std::string &s);
+    bool isFileExists(const std::string&);
+    void updateBlockDevice();
 
 	BlockDeviceSimulator *blkdevsim;
-
 	static const uint8_t CURR_VERSION = 0x03;
 	static const char *MYFS_MAGIC;
 

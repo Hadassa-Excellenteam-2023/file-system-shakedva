@@ -3,6 +3,8 @@
 #include <iostream>
 #include <math.h>
 #include <sstream>
+#include <algorithm>
+
 
 const char *MyFs::MYFS_MAGIC = "MYFS";
 const std::string WHITESPACES(" \t\f\v\n\r");
@@ -30,7 +32,6 @@ MyFs::MyFs(BlockDeviceSimulator *blkdevsim_) : blkdevsim(blkdevsim_) {
 }
 
 void MyFs::format() {
-
     // put the header in place
     myfs_header header;
     strncpy(header.magic, MYFS_MAGIC, sizeof(header.magic));
@@ -40,8 +41,11 @@ void MyFs::format() {
 }
 
 void MyFs::create_file(std::string path_str, bool directory) {
+    if(isFileExists(path_str))
+        return;
     File f = File(path_str, directory);
     _files.push_back(f);
+    updateBlockDevice();
 
 }
 
@@ -51,16 +55,20 @@ std::string MyFs::get_content(std::string path_str) {
             return file.getData();
         }
     }
-    return "";
+    return ""; // file doesn't exists
 }
 
 void MyFs::set_content(std::string path_str, std::string content) {
     for (auto &file: _files) {
         if (file.getName() == path_str) {
             file.setData(content);
+            updateBlockDevice();
             return;
         }
     }
+    //todo string format
+    throw std::runtime_error("File does not exists");
+
 }
 
 std::vector<File> MyFs::list_dir(std::string path_str) {
@@ -78,17 +86,17 @@ void MyFs::updateBlockDevice() {
 }
 
 void MyFs::parseBlockDevice() {
-    std::istringstream f(_blkdevData);
+    std::istringstream blkdevIss(_blkdevData);
     std::string line;
-    int inode;
+    std::string inode;
     std::string name;
     std::string data;
     char type;
-
-    while(std::getline(f, line))
-    {
-        f >> inode >> name >> type;
-        std::getline(f, data);
+    std::getline(blkdevIss, line); // remove empty line
+    while (std::getline(blkdevIss, line)) {
+        std::istringstream lineIss(line);
+        lineIss >> inode >> name >> type;
+        std::getline(lineIss, data);
         data = ltrim(data);
         File file = File(name, type == 'd');
         file.setData(data);
@@ -99,4 +107,19 @@ void MyFs::parseBlockDevice() {
 std::string MyFs::ltrim(const std::string &s) {
     size_t start = s.find_first_not_of(WHITESPACES);
     return (start == std::string::npos) ? "" : s.substr(start);
+}
+
+bool MyFs::isFileExists(const std::string& path_str) {
+    for(const auto& file: _files)
+        if(file.getName() == path_str)
+            return true;
+    return false;
+}
+
+void MyFs::remove_file(const std::string& path_str) {
+    _files.erase(std::remove_if(
+            _files.begin(), _files.end(),
+            [path_str](const File& x) {
+                return x.getName() ==  path_str;
+            }), _files.end());
 }

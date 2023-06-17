@@ -69,17 +69,15 @@ void run_vfs(MyFs &fs) {
             }
             else if (cmd[0] == CREATE_FILE_CMD) {
                 fs.create_file(getPath(cmd), false);
-                fs.updateBlockDevice();
             }
             else if (cmd[0] == CONTENT_CMD) {
                 std::cout << fs.get_content(getPath(cmd)) << std::endl;
             }
             else if (cmd[0] == EDIT_CMD) {
                 fs.set_content(getPath(cmd), getCmdContent(cmd));
-                fs.updateBlockDevice();
             }
-            else if (cmd[0] == REMOVE_CMD) { //todo
-                throw std::runtime_error("not implemented");
+            else if (cmd[0] == REMOVE_CMD) {
+                fs.remove_file(getPath(cmd));
             }
             else {
                 std::cout << "unknown command: " << cmd[0] << std::endl;
